@@ -1,6 +1,8 @@
 import io
 import time
 import uuid
+from logging import currentframe
+
 import matplotlib.pyplot as plt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
@@ -171,5 +173,6 @@ if __name__ == '__main__':
     print(_this)
     captcha_verification = make_captcha_check_flag(_this)
     print(captcha_verification)
+    current_page=2 #页码
     # 7.请求最终数据
-    print(fetch_procurement_data(captcha_verification))
+    print(fetch_procurement_data(captcha_verification,current=current_page))

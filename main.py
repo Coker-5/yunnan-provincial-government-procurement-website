@@ -1,14 +1,13 @@
 import io
 import time
 import uuid
-from logging import currentframe
-
 import matplotlib.pyplot as plt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 import base64
 import requests
 import json
+from ocr_scan import ocr_captcha
 
 session = requests.Session()
 
@@ -104,7 +103,7 @@ def verify(pointJson, token, clientUid):
     # print(f"请求头:{session.headers}————{data}")
 
     # Print the response
-    print(response.text)
+    # print(response.text)
 
 
 #  5.生成captchaCheckFlag参数
@@ -145,11 +144,20 @@ def fetch_procurement_data(captcha_check_flag, current=7, row_count=10, search_p
     }
 
     response = session.post(url, headers=headers, data=data, verify=False)
-    print(f"请求头：{session.headers}")
     return response.text # 如果返回JSON数据则自动解析
 
-
-
+# ddddocr自动识别
+def ocr_get(words):
+    ocr_list={}
+    ocr_resli=ocr_captcha()
+    for word in words:
+        if word in ocr_resli:
+            ocr_list[word]=ocr_resli[word]
+        else:
+            ocr_result=input(f"请补充{word}的坐标，以空格分割(如32 552):").split(" ")
+            ocr_list[word]={'x':ocr_result[0],'y':ocr_result[1]}
+    ocr_list=[i for i in ocr_list.values()]
+    return ocr_list
 
 
 if __name__ == '__main__':
@@ -157,9 +165,14 @@ if __name__ == '__main__':
     get_list()
     # 2.获取验证码
     token, word_list, secret_key, client_uid = get_captcha()
-    print(token, word_list, secret_key, client_uid)
-    # 3.输入验证码
-    point_input = json.loads(input("请输入结果："))   #[{"x": 244, "y": 62},{"x": 274, "y": 73},{"x": 257, "y": 90}]
+    print(word_list)
+    # 3.使用ocr识别
+    ocr_res=ocr_get(word_list)
+    point_input=ocr_res
+
+    # 手动输入验证码
+    # point_input = json.loads(input("请输入结果："))
+
     # 4.验证码结果加密
     vencrypted_result = aes_encrypt(point_input, secret_key)
     # 5.验证验证码
@@ -170,9 +183,8 @@ if __name__ == '__main__':
             "backToken": token,
             "checkPosArr": point_input
         }
-    print(_this)
+    # print(_this)
     captcha_verification = make_captcha_check_flag(_this)
-    print(captcha_verification)
-    current_page=2 #页码
+    current_page=2 # 设置页码
     # 7.请求最终数据
     print(fetch_procurement_data(captcha_verification,current=current_page))

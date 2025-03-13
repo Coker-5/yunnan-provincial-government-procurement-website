@@ -25,11 +25,13 @@
 
 ##效果图
 1.启动main.py
-![img.png](img.png)
+![5e140172b52854b74b217c689a923264](https://github.com/user-attachments/assets/bf8dc18f-3589-4d43-9cc1-65229cde28f1)
+
 2.补充未识别成功的坐标
-![img_2.png](img_2.png)
+![1b0e1a83b2abd2bacb9170878629f70c](https://github.com/user-attachments/assets/ef45fc68-32af-4efd-beb8-a11fd2158f7f)
 3.获得数据
-![img_3.png](img_3.png)
+![b8ed628cdfb87a1414c416ad34c25821](https://github.com/user-attachments/assets/86f68aff-2c09-41c5-85a7-5ab4264c171c)
+
 
 #### 作者声明
 
